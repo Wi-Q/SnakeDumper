@@ -61,7 +61,7 @@ class TableSelector
         $tables = $filter->filterWhiteListTables($tables);
         $tables = $filter->filterIgnoredTables($tables);
 
-        $tables = $this->tableDependencyResolver->sortTablesByDependencies($tables);
+        $tables = $this->tableDependencyResolver->sortTablesByDependencies($tables, $config);
         $this->tableDependencyResolver->createDependentFilters($tables, $config);
 
         // Quote all identifiers, as Doctrine DBAL only quotes reserved keywords by default

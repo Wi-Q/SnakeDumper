@@ -36,10 +36,11 @@ class TableDependencyResolver
      * Brings the table into an order which respects dependencies between them.
      *
      * @param Table[] $tables
+     * @param DumperConfigurationInterface $config
      *
      * @return Table[]
      */
-    public function sortTablesByDependencies(array $tables)
+    public function sortTablesByDependencies(array $tables, DumperConfigurationInterface $config)
     {
         $nodes = array();
         $dependencyGraph = new DependencyGraph();
@@ -56,6 +57,11 @@ class TableDependencyResolver
             foreach ($table->getForeignKeys() as $foreignKey) {
                 // TODO foreign keys pointing to own table not supported yet
                 if ($foreignKey->getForeignTableName() == $table->getName()) {
+                    continue;
+                }
+
+                // Skip if config specified ignore table
+                if ($config->getTableConfig($foreignKey->getForeignTableName())->isTableIgnored()) {
                     continue;
                 }
 
